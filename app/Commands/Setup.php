@@ -98,7 +98,7 @@ class Setup extends Command
         $this->baseUserDirectory = $this->interrogator->ask(
             'The path to your User directory',
             $this->defaultBaseUserDirectory()
-        );
+		);
     }
 
     private function runTasks(){
@@ -116,7 +116,9 @@ class Setup extends Command
         $lines[] = 'USE_COMPOSER=true';
         $lines[] = 'DEFAULT_COMPOSER_PROJECT=laravel/laravel';
         $lines[] = 'DEFAULT_FOLDER_SUFFIX=/public';
-        $lines[] = 'DEFAULT_DOMAIN_EXTENSION=.app';
+		$lines[] = 'DEFAULT_DOMAIN_EXTENSION=.app';
+		/** 013 */
+		$lines[] = 'CURRENT_OS='.$this->installType;
         $lines[] = 'HOSTS_FILE_PATH='.$this->defaultHostsFilePath();
         $lines[] = 'HOMESTEAD_HOST_IP=192.168.10.10';
         $lines[] = 'HOMESTEAD_FILE_PATH='.$this->defaultHomesteadFilePath();

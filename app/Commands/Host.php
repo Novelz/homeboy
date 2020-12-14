@@ -24,6 +24,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/** 013 */
+use App\Actions\HomesteadMapFolder;
+use App\Actions\CreateProjectAction;
+
 class Host extends Command
 {
 
@@ -219,7 +223,32 @@ class Host extends Command
             $accessCommand = 'cd '.$this->folder;
         }
         return new ComposerCreateProjectAction($this->commandExecutor, $accessCommand, $this->composerProject, $this->name);
-    }
+	}
+
+	/** 013 */
+	private function createProjectAction(){
+		if(!empty($this->config->getAccessLocalSitesDirectoryCommand())){
+            $accessCommand = $this->config->getAccessLocalSitesDirectoryCommand();
+        }else{
+			if(!is_dir($this->folder)) {
+				switch($this->config->getCurrentOs()) {
+					case 'Windows':
+						$create_command = 'mkdir '.$this->folder.' && ';
+					break;
+					case 'Linux':
+						$create_command = 'mkdir '.$this->folder.' && ';
+					break;
+					case 'Os':
+						$create_command = 'mkdir '.$this->folder.' && ';
+					break;
+				}
+				$accessCommand = $create_command.'cd '.$this->folder;
+			} else {
+				$accessCommand = 'cd '.$this->folder;
+			}
+        }
+        return new CreateProjectAction($this->commandExecutor,$accessCommand, $this->composerProject, $this->name);
+	}
 
     private function vagrantRunProvisionAction(){
         if(!empty($this->config->getHomesteadAccessDirectoryCommand())){
@@ -236,7 +265,12 @@ class Host extends Command
 
     private function homesteadMapSiteAction(){
         return new HomesteadMapSite($this->config->getHomesteadPath(), $this->domain, $this->config->getHomesteadSitesPath().$this->name.$this->folderSuffix);
-    }
+	}
+	
+	/** 013 */
+	private function homesteadMapFolderAction(){
+		return new HomesteadMapFolder($this->config->getHomesteadPath(), $this->domain, $this->config->getHomesteadSitesPath().$this->name.$this->folderSuffix, $this->folder);
+	}
 
     private function homesteadAddDatabaseAction(){
         return new HomesteadAddDatabase($this->config->getHomesteadPath(), $this->database);
@@ -247,10 +281,17 @@ class Host extends Command
 
         if($this->useComposer){
             $this->outputInterface->writeln("- ".$this->composerCreateProjectAction()->confirmationMessage());
-        }
+		}
+		
+		/** 013 */
+		if(!$this->useComposer){
+			$this->outputInterface->writeln("- ".$this->createProjectAction()->confirmationMessage());
+		}
 
         $this->outputInterface->writeln('- '.$this->hostsAddLineAction()->confirmationMessage());
-        $this->outputInterface->writeln('- '.$this->homesteadMapSiteAction()->confirmationMessage());
+		$this->outputInterface->writeln('- '.$this->homesteadMapSiteAction()->confirmationMessage());
+		/** 013 */
+		$this->outputInterface->writeln('- '.$this->homesteadMapFolderAction()->confirmationMessage());
         $this->outputInterface->writeln('- '.$this->homesteadAddDatabaseAction()->confirmationMessage());
 
         $this->outputInterface->writeln('- '.$this->vagrantRunProvisionAction()->confirmationMessage() );
@@ -269,13 +310,23 @@ class Host extends Command
         if($this->useComposer){
             $this->outputInterface->writeln('<info>'.$this->composerCreateProjectAction()->actionMessage().'...</info>');
             $this->composerCreateProjectAction()->run();
-        }
+		}
+		
+		/** 013 */
+		if(!$this->useComposer){
+			$this->outputInterface->writeln('<info>'.$this->createProjectAction()->actionMessage().'...</info>');
+            $this->createProjectAction()->run();
+		}
 
         $this->outputInterface->writeln('<info>'.$this->hostsAddLineAction()->actionMessage().'...</info>');
         $this->hostsAddLineAction()->run();
 
         $this->outputInterface->writeln('<info>'.$this->homesteadMapSiteAction()->actionMessage().'...</info>');
-        $this->homesteadMapSiteAction()->run();
+		$this->homesteadMapSiteAction()->run();
+		
+		/** 013 */
+		$this->outputInterface->writeln('<info>'.$this->homesteadMapFolderAction()->actionMessage().'...</info>');
+        $this->homesteadMapFolderAction()->run();
 
         $this->outputInterface->writeln('<info>'.$this->homesteadAddDatabaseAction()->actionMessage().'...</info>');
         $this->homesteadAddDatabaseAction()->run();

@@ -36,7 +36,8 @@ $commands = [
     new \App\Commands\Setup(null, $config),
     new \App\Commands\Vagrant\VagrantRun(null, $config),
     new \App\Commands\File(null, $config),
-    new \App\Commands\Domain(null, $config),
+	new \App\Commands\Domain(null, $config),
+	new \App\Commands\CreateProject(null, $config),
     new \App\Commands\Composer\ComposerCreateProject(null, $config),
 ];
 

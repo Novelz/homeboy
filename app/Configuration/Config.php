@@ -10,7 +10,7 @@ class Config{
     private $folderSuffix;
     private $domainExtension;
     private $hostIP;
-    private $hostsPath;
+	private $hostsPath;
     private $homesteadPath;
     private $homesteadSitesPath;
     private $homesteadBoxPath;
@@ -18,7 +18,9 @@ class Config{
     private $accessLocalSitesDirectoryCommand;
     private $composerGlobal;
     private $dotEnvDirectory;
-    private $dotEnvFileName;
+	private $dotEnvFileName;
+	/**013 */
+	private $currentOs;
 
     public function updateFromEnvironment(){
         $this->folder = getenv('LOCAL_SITES_PATH');
@@ -26,13 +28,15 @@ class Config{
         $this->useComposer = boolval(getenv('USE_COMPOSER'));
         $this->composerProject = getenv('DEFAULT_COMPOSER_PROJECT');
         $this->hostsPath = getenv('HOSTS_FILE_PATH');
-        $this->hostIP = getenv('HOMESTEAD_HOST_IP');
+		$this->hostIP = getenv('HOMESTEAD_HOST_IP');
         $this->homesteadPath = getenv('HOMESTEAD_FILE_PATH');
         $this->homesteadSitesPath = getenv('HOMESTEAD_SITES_PATH');
         $this->homesteadBoxPath = getenv('HOMESTEAD_BOX_PATH');
         $this->homesteadAccessDirectoryCommand = getenv('HOMESTEAD_ACCESS_DIRECTORY_COMMAND');
         $this->domainExtension = getenv('DEFAULT_DOMAIN_EXTENSION');
-        $this->accessLocalSitesDirectoryCommand = getenv('ACCESS_LOCAL_SITES_DIRECTORY_COMMAND');
+		$this->accessLocalSitesDirectoryCommand = getenv('ACCESS_LOCAL_SITES_DIRECTORY_COMMAND');
+		/**013*/
+		$this->currentOs = getenv('CURRENT_OS');
     }
 
     public function dotEnvFilePath(){
@@ -101,7 +105,7 @@ class Config{
 
     public function getAccessLocalSitesDirectoryCommand(){
         return $this->accessLocalSitesDirectoryCommand;
-    }
+	}
 
     public function setComposerGlobal($composerGlobal){
         return $this->composerGlobal = $composerGlobal;
@@ -125,6 +129,11 @@ class Config{
 
     public function getDotEnvFileName(){
         return $this->dotEnvFileName;
-    }
+	}
+	
+	/** 013 */
+	public function getCurrentOs(){
+		return $this->currentOs;
+	}
 
 }

@@ -16,6 +16,17 @@ class HomesteadFileManager extends BaseFileManager {
         $search = "sites:";
         $homesteadContents = str_replace($search,$search.PHP_EOL.$newLines,$homesteadContents);
         return $this->newFileContents($homesteadContents);
+	}
+
+	/*013*/
+    public function addMapLineToFolder($hostFolder, $directory){
+        $homesteadContents = $this->getFileContents();
+        $mapLine = $this->getTabSpacing()."- map: ".$hostFolder;
+        $toLine = $this->getTabSpacing()."  to: ".$directory;
+        $newLines = $mapLine.PHP_EOL.$toLine;
+        $search = "folders:";
+        $homesteadContents = str_replace($search,$search.PHP_EOL.$newLines,$homesteadContents);
+        return $this->newFileContents($homesteadContents);
     }
 
     public function addDatabase($database){
